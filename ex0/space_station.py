@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Optional
-# Sicherstellen, dass pydantic installiert ist mit pip install pydantic
-# oder mit brew install pydantic, wenn Homebrew verwendet wird.
-from pydantic import BaseModel, Field ,ValidationError
 
-    
+# Dieses Modell prüft die Stationsdaten automatisch mit Pydantic.
+from pydantic import BaseModel, Field, ValidationError
+
+
 class SpaceStation(BaseModel):
+    # Alias: beim Erstellen darf man "id" statt "station_id" verwenden.
 
     station_id: str = Field(..., min_length=3,
                             max_length=10, alias='id')
@@ -24,7 +25,7 @@ def main():
     print("Space Station Data Validation Example")
     print("=" * 40)
 
-
+    # Gültiges Beispiel: sollte ohne Fehler erstellt werden.
     station = SpaceStation(
         id="ISS001",
         name="International Space Station",
@@ -46,6 +47,8 @@ def main():
 
     print("=" * 40)
 
+    # Ungültiges Beispiel: hier fehlt das Alias-Feld "id".
+    # Dadurch sehen wir direkt eine ValidationError-Ausgabe.
     try:
         SpaceStation(
             station_id="BAD001",
